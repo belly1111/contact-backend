@@ -18,33 +18,38 @@ app.get("/", (req, res) => {
 
 // ================= CONTACT ROUTE =================
 app.post("/contact", async (req, res) => {
-  const { name, email, message } = req.body;
-
-  const msg = {
-    to: "nabilhaggag2006@gmail.com",
-    from: "Nabil Portfolio <nabilhaggag2006@gmail.com>",
-    replyTo: email,
-    subject: `New Message from ${name} 🚀`,
-    html: `
-      <h2>New Contact Message</h2>
-      <p><b>Name:</b> ${name}</p>
-      <p><b>Email:</b> ${email}</p>
-      <p><b>Message:</b> ${message}</p>
-    `,
-  };
-
   try {
+    const { name, email, message } = req.body;
+
+    const msg = {
+      to: "nabilhaggag2006@gmail.com",
+      from: "Nabil Portfolio <nabilhaggag2006@gmail.com>",
+      replyTo: email,
+      subject: `New Message from ${name} 🚀`,
+      html: `
+        <h2>New Contact Message</h2>
+        <p><b>Name:</b> ${name}</p>
+        <p><b>Email:</b> ${email}</p>
+        <p><b>Message:</b> ${message}</p>
+      `,
+    };
+
     await sgMail.send(msg);
+
     res.json({ success: true });
+
   } catch (error) {
     console.log(error.response?.body || error);
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({
+      success: false,
+      error: "SendGrid error"
+    });
   }
 });
 
 const PORT = process.env.PORT || 8080;
 
-app.listen(PORT, "0.0.0.0", () => {
+app.listen(PORT, () => {
   console.log("Server running on port " + PORT);
 });
 
