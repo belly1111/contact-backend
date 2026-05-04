@@ -8,9 +8,15 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// SendGrid API Key من .env
+// SendGrid API Key
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
+// ================= ROOT HEALTH CHECK =================
+app.get("/", (req, res) => {
+  res.status(200).send("API is running 🚀");
+});
+
+// ================= CONTACT ROUTE =================
 app.post("/contact", async (req, res) => {
   const { name, email, message } = req.body;
 
@@ -32,7 +38,7 @@ app.post("/contact", async (req, res) => {
     res.json({ success: true });
   } catch (error) {
     console.log(error.response?.body || error);
-    res.status(500).json({ success: false, error: error.message });;
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -42,10 +48,7 @@ app.listen(PORT, "0.0.0.0", () => {
   console.log("Server running on port " + PORT);
 });
 
+// safety check
 if (!process.env.SENDGRID_API_KEY) {
   console.error("Missing SENDGRID_API_KEY");
 }
-app.get("/", (req, res) => {
-  res.status(200).send("API is running 🚀");
-});
-
