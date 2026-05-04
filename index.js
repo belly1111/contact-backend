@@ -46,5 +46,6 @@ if (!process.env.SENDGRID_API_KEY) {
   console.error("Missing SENDGRID_API_KEY");
 }
 app.get("/", (req, res) => {
-  res.send("API is running 🚀");
+  res.status(200).send("API is running 🚀");
 });
+
