@@ -32,12 +32,19 @@ app.post("/contact", async (req, res) => {
     res.json({ success: true });
   } catch (error) {
     console.log(error.response?.body || error);
-    res.json({ success: false });
+    res.status(500).json({ success: false, error: error.message });;
   }
 });
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 8080;
 
-app.listen(PORT, () => {
+app.listen(PORT, "0.0.0.0", () => {
   console.log("Server running on port " + PORT);
+});
+
+if (!process.env.SENDGRID_API_KEY) {
+  console.error("Missing SENDGRID_API_KEY");
+}
+app.get("/", (req, res) => {
+  res.send("API is running 🚀");
 });
